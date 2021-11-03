@@ -3,7 +3,9 @@ package servicos;
 import java.util.Date;
 
 import org.hamcrest.core.Is;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import br.ce.wcaquino.entidades.Filme;
@@ -16,10 +18,22 @@ import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoServiceTest {
 
+	private LocacaoService service;
+
+	@Before
+	public void setup() {
+		service = new LocacaoService();
+		System.out.println("Before");
+	}
+
+	@After
+	public void tearDown() {
+		System.out.println("After");
+	}
+
     @Test
 	public void test() throws Exception {
 		//cenário
-		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Usuario 1");
 		Filme filme = new Filme("Filme 1", 2, 5.0);
 		
@@ -34,7 +48,6 @@ public class LocacaoServiceTest {
 	@Test(expected = FilmeSemEstoqueException.class)
 	public void testLocacao_filmeSemEstoque_Elegante() throws Exception {
 		//cenário
-		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Usuário 2");
 		Filme filme = new Filme("Filme 2", 0, 5.0);
 
@@ -46,12 +59,11 @@ public class LocacaoServiceTest {
 	public void testLocacao_usuarioVazio() throws FilmeSemEstoqueException {
 		//cenario
 		LocacaoService service = new LocacaoService();
-		Usuario usuario = new Usuario("Usuário 2");
 		Filme filme = new Filme("Filme 3", 1, 4.0);
 
 		//ação
 		try {
-			service.alugarFilme(usuario, filme);
+			service.alugarFilme(null, filme);
 			Assert.fail();
 		} catch (LocadoraException e) {
 			Assert.assertThat(e.getMessage(), Is.is("Usuário vazio"));
